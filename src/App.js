@@ -5,32 +5,35 @@ const url = "https://jsonplaceholder.typicode.com/posts";
 
 const App = () => {
   const [data, setData] = useState([]);
-  // console.log(data);
   const [update, setUpdate] = useState(data);
-  const handleUpdate = async post => {
-    post.title = "UPDATED";
-    const newData = await axios.put(url + "/" + post.id, post);
-    setUpdate(newData, [...data]);
-  };
-  const handleClick = async () => {
-    const obj = { title: " raj purkait" };
+  console.log(update);
+  const handleAdd = async () => {
+    const obj = {
+      title: "raj purkait",
+    };
     const create = await axios.post(url, obj);
     setData([create.data, ...data]);
+  };
+  const handleUpdate = async post => {
+    post.title = "updated";
+    const update = await axios.put(url + "/" + post.id, post.title);
+    setUpdate(update, [...data]);
+  };
+  const fetchData = async () => {
+    const create = await axios.get(url);
+    setData(create.data);
   };
   const handleDelete = async post => {
     await axios.delete(url + "/" + post.id);
     const newData = data.filter(nd => nd.id !== post.id);
     setData(newData);
   };
-
-  useEffect(async () => {
-    const res = await axios.get(url);
-
-    setData(res.data);
+  useEffect(() => {
+    fetchData();
   }, []);
   return (
     <>
-      <button className='btn btn-primary m-2' onClick={() => handleClick()}>
+      <button className='btn btn-primary m-2' onClick={() => handleAdd()}>
         Add
       </button>
       <table className='table'>
